@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { createProfile, type CreateState } from "./actions";
 import { Icon } from "@/components/icons";
 import { Input } from "@/components/ui/input";
@@ -50,6 +51,33 @@ export function PublishForm({ countries }: { countries: Country[] }) {
   const [previews, setPreviews] = useState<string[]>([]);
   const cities = countries.find((c) => c.code === countryCode)?.cities ?? [];
   const err = state.fieldErrors ?? {};
+
+  // Al fallar la validación: toast + scroll al primer campo con error.
+  useEffect(() => {
+    if (!state.error && !state.fieldErrors) return;
+    const fe = state.fieldErrors ?? {};
+    const order = [
+      "title",
+      "nickname",
+      "bio",
+      "age",
+      "gender",
+      "countryCode",
+      "citySlug",
+      "bodyType",
+      "photoFiles",
+    ];
+    const first = order.find((f) => fe[f]);
+    toast.error(state.error ?? "Revisa los campos marcados.", {
+      description: first ? "Te llevamos al primer campo por corregir." : undefined,
+    });
+    if (first) {
+      const el = (document.getElementById(first) ??
+        document.querySelector(`[name="${first}"]`)) as HTMLElement | null;
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      el?.focus?.({ preventScroll: true });
+    }
+  }, [state]);
 
   function onFiles(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []).slice(0, 6);
