@@ -1,0 +1,24 @@
+# PostgreSQL para producción / desarrollo "como producción".
+#
+# Uso:
+#   1) docker compose up -d
+#   2) En .env:  DATABASE_URL="postgresql://tuprepa:tuprepa@localhost:5432/tuprepa?schema=public"
+#   3) En prisma/schema.prisma cambia  provider = "sqlite"  ->  "postgresql"
+#   4) npm run db:push && npm run db:seed
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: tuprepa-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tuprepa
+      POSTGRES_PASSWORD: tuprepa
+      POSTGRES_DB: tuprepa
+    ports:
+      - "5432:5432"
+    volumes:
+      - tuprepa_pgdata:/var/lib/postgresql/data
+
+volumes:
+  tuprepa_pgdata:
