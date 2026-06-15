@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { createProfile, type CreateState } from "./actions";
 import { Icon } from "@/components/icons";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -41,16 +41,48 @@ function Section({
   );
 }
 
+type CreateState = { error?: string; fieldErrors?: Record<string, string> };
+
 export function PublishForm({ countries }: { countries: Country[] }) {
   const d = getDict("es");
-  const [state, action, pending] = useActionState<CreateState, FormData>(
-    createProfile,
-    {},
-  );
+  const router = useRouter();
+  const [state, setState] = useState<CreateState>({});
+  const [pending, setPending] = useState(false);
   const [countryCode, setCountryCode] = useState(countries[0]?.code ?? "");
   const [previews, setPreviews] = useState<string[]>([]);
   const cities = countries.find((c) => c.code === countryCode)?.cities ?? [];
   const err = state.fieldErrors ?? {};
+
+  // Envío por fetch (no Server Action): la respuesta es JSON limpio y el
+  // formulario NO se resetea al fallar la validación.
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (pending) return;
+    const form = e.currentTarget;
+    setPending(true);
+    setState({});
+    try {
+      const res = await fetch("/api/profiles", {
+        method: "POST",
+        body: new FormData(form),
+      });
+      const body = (await res.json().catch(() => ({}))) as CreateState & {
+        path?: string;
+      };
+      if (res.ok && body.path) {
+        toast.success("¡Perfil publicado!");
+        router.push(body.path);
+        return; // navegamos: dejamos pending activo hasta desmontar
+      }
+      setState({
+        error: body.error ?? "No se pudo publicar.",
+        fieldErrors: body.fieldErrors,
+      });
+    } catch {
+      setState({ error: "No se pudo conectar. Inténtalo de nuevo." });
+    }
+    setPending(false);
+  }
 
   // Al fallar la validación: toast + scroll al primer campo con error.
   useEffect(() => {
@@ -85,7 +117,7 @@ export function PublishForm({ countries }: { countries: Country[] }) {
   }
 
   return (
-    <form action={action} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-6">
       {state.error && (
         <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">
           {state.error}
