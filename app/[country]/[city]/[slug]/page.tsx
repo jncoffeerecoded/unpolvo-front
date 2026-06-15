@@ -8,11 +8,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ProfileGallery } from "@/components/ProfileGallery";
 import { ProfileSocial } from "./ProfileSocial";
 import { Comments } from "./Comments";
-import {
-  getProfileBySlug,
-  getRelated,
-  getUserInteraction,
-} from "@/lib/data";
+import { getProfileBySlug, getRelated, getInteraction } from "@/lib/data";
 import { getDict } from "@/lib/i18n";
 import {
   absoluteUrl,
@@ -67,10 +63,10 @@ export default async function ProfilePage({ params }: Props) {
   const session = await auth();
   const currentUserId = session?.user?.id ?? null;
   const isOwner = !!currentUserId && currentUserId === p.ownerId;
-  const interaction = currentUserId
-    ? await getUserInteraction(p.id, currentUserId)
+  const interaction = session?.accessToken
+    ? await getInteraction(p.id, session.accessToken)
     : { liked: false, myRating: null };
-  const related = await getRelated(p.countryCode, p.citySlug, p.slug);
+  const related = await getRelated(p.slug);
 
   const ld = profileJsonLd({
     name: `${p.nickname}, ${p.age}`,

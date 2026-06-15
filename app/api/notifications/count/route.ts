@@ -4,7 +4,11 @@ import { getUnreadCount } from "@/lib/data";
 
 export async function GET() {
   const session = await auth();
-  if (!session?.user?.id) return NextResponse.json({ count: 0 });
-  const count = await getUnreadCount(session.user.id);
-  return NextResponse.json({ count });
+  if (!session?.accessToken) return NextResponse.json({ count: 0 });
+  try {
+    const { count } = await getUnreadCount(session.accessToken);
+    return NextResponse.json({ count });
+  } catch {
+    return NextResponse.json({ count: 0 });
+  }
 }

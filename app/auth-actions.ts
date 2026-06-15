@@ -1,16 +1,13 @@
 "use server";
 
 import { AuthError } from "next-auth";
-import bcrypt from "bcryptjs";
-import { z } from "zod";
-import { prisma } from "@/lib/prisma";
 import { signIn, signOut } from "@/auth";
+import { apiSend } from "@/lib/api";
 
 export type AuthState = { error?: string };
 
 function safeNext(value: FormDataEntryValue | null): string {
   const s = typeof value === "string" ? value : "";
-  // Solo rutas internas, para evitar open-redirect.
   return s.startsWith("/") && !s.startsWith("//") ? s : "/cuenta";
 }
 
@@ -30,35 +27,31 @@ export async function loginWithCredentials(
     if (error instanceof AuthError) {
       return { error: "Email o contraseña incorrectos." };
     }
-    throw error; // re-lanza el redirect de Next
+    throw error;
   }
 }
-
-const registerSchema = z.object({
-  name: z.string().trim().min(2, "Escribe tu nombre"),
-  email: z.string().trim().email("Email no válido"),
-  password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
-});
 
 export async function registerUser(
   _prev: AuthState,
   formData: FormData,
 ): Promise<AuthState> {
-  const parsed = registerSchema.safeParse({
-    name: formData.get("name"),
-    email: formData.get("email"),
-    password: formData.get("password"),
+  const name = String(formData.get("name") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+
+  // El backend valida y crea el usuario.
+  const { ok, body } = await apiSend("/auth/register", {
+    method: "POST",
+    json: { name, email, password },
   });
-  if (!parsed.success) {
-    return { error: parsed.error.issues[0].message };
+  if (!ok) {
+    const fe = body.fieldErrors as Record<string, string> | undefined;
+    return {
+      error: fe
+        ? Object.values(fe)[0]
+        : ((body.error as string) ?? "No se pudo registrar."),
+    };
   }
-  const { name, email, password } = parsed.data;
-
-  const exists = await prisma.user.findUnique({ where: { email } });
-  if (exists) return { error: "Ese email ya está registrado." };
-
-  const passwordHash = await bcrypt.hash(password, 10);
-  await prisma.user.create({ data: { name, email, passwordHash } });
 
   await signIn("credentials", { email, password, redirectTo: "/cuenta" });
   return {};

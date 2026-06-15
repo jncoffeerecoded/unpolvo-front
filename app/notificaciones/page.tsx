@@ -34,9 +34,9 @@ function text(type: string, actor: string, body: string | null): string {
 
 export default async function NotificationsPage() {
   const session = await auth();
-  if (!session?.user?.id) redirect("/login?next=/notificaciones");
+  if (!session?.accessToken) redirect("/login?next=/notificaciones");
 
-  const items = await getNotifications(session.user.id);
+  const items = await getNotifications(session.accessToken);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
@@ -71,7 +71,8 @@ export default async function NotificationsPage() {
                 <div className="min-w-0 flex-1">
                   <p className="text-sm">{text(n.type, actor, n.body)}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
-                    {n.profile?.title} · {n.createdAt.toLocaleDateString("es")}
+                    {n.profile?.title} ·{" "}
+                    {new Date(n.createdAt).toLocaleDateString("es")}
                   </p>
                 </div>
                 {!n.read && (

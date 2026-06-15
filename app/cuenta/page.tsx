@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { getProfilesByUser } from "@/lib/data";
+import { getMyProfiles } from "@/lib/data";
 import { profilePath } from "@/lib/seo";
 import { Flag } from "@/components/Flag";
 import { Stars } from "@/components/Stars";
@@ -25,9 +25,9 @@ const STATUS: Record<string, { label: string; cls: string }> = {
 
 export default async function AccountPage() {
   const session = await auth();
-  if (!session?.user?.id) redirect("/login?next=/cuenta");
+  if (!session?.accessToken) redirect("/login?next=/cuenta");
 
-  const profiles = await getProfilesByUser(session.user.id);
+  const profiles = await getMyProfiles(session.accessToken);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">

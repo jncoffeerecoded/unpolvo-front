@@ -108,7 +108,7 @@ function CommentRow({
         <p className="text-sm font-medium">
           {comment.authorName}{" "}
           <span className="font-normal text-muted-foreground">
-            · {comment.createdAt.toLocaleDateString("es")}
+            · {new Date(comment.createdAt).toLocaleDateString("es")}
           </span>
         </p>
         <p className="text-sm text-foreground/90">{comment.body}</p>
