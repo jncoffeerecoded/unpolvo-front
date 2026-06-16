@@ -5,6 +5,7 @@ export type ProfileCardView = {
   slug: string;
   title: string;
   nickname: string;
+  excerpt: string;
   age: number;
   gender: string;
   bodyType: string | null;

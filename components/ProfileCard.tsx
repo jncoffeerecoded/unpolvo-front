@@ -57,6 +57,12 @@ export function ProfileCard({
           <span className="truncate">{p.cityName}</span>
         </p>
 
+        {p.excerpt && (
+          <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
+            {p.excerpt}
+          </p>
+        )}
+
         <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <Stars value={p.ratingAvg} className="h-3 w-3" />
