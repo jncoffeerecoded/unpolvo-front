@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { Icon } from "./icons";
+import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -38,9 +39,7 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-          <span className="text-primary">
-            <Icon name="heart" filled className="h-6 w-6" />
-          </span>
+          <Logo className="h-8 w-8" />
           {SITE_NAME}
         </Link>
 
