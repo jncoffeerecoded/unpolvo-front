@@ -1,6 +1,6 @@
 // Configuración del sitio + helpers de rutas, canonical y datos estructurados.
 
-export const SITE_NAME = "Citalia";
+export const SITE_NAME = "CitasAlDia";
 
 export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"

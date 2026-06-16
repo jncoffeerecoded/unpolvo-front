@@ -1,4 +1,4 @@
-# Citalia — Marketplace de citas (multipaís, SEO-first)
+# CitasAlDia — Marketplace de citas (multipaís, SEO-first)
 
 Portal de **perfiles de citas geolocalizados**. Cada persona publica su propio
 perfil para conocer gente, con subpáginas indexables por país, ciudad y
