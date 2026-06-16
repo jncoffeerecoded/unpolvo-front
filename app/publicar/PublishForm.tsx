@@ -257,20 +257,6 @@ export function PublishForm({ countries }: { countries: Country[] }) {
         <FieldError msg={err.photoFiles} />
       </Section>
 
-      <Section title="Destacar tu perfil" hint="Aparece en promocionales durante 7 días.">
-        <label className="flex cursor-pointer items-center gap-3">
-          <input
-            type="checkbox"
-            name="featured"
-            className="h-5 w-5 rounded border-input accent-primary"
-          />
-          <span className="flex items-center gap-1.5 text-sm">
-            <Icon name="star" filled className="h-4 w-4 text-amber-500" />
-            Destacar mi perfil (demo — en producción se cobra aquí)
-          </span>
-        </label>
-      </Section>
-
       <div className="flex flex-wrap items-center justify-between gap-4">
         <p className="text-xs text-muted-foreground">
           Al publicar confirmas que eres mayor de 18 años y que el contenido es tuyo.

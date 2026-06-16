@@ -110,12 +110,6 @@ export function Header() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/verificacion">
-                      <Icon name="shield-check" className="mr-2 h-4 w-4" />
-                      Verificar mi perfil
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
                     <Link href="/publicar">
                       <Icon name="sparkles" className="mr-2 h-4 w-4" />
                       Publicar perfil
