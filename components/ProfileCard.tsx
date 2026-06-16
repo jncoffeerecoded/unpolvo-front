@@ -21,7 +21,7 @@ export function ProfileCard({
   return (
     <Link
       href={href}
-      className="group block overflow-hidden rounded-2xl border bg-card shadow-sm transition hover:shadow-md"
+      className="group grid grid-cols-[40%_1fr] overflow-hidden rounded-2xl border bg-card shadow-sm transition hover:shadow-md"
     >
       <div className="relative aspect-[3/4] overflow-hidden bg-muted">
         <Avatar
@@ -47,17 +47,17 @@ export function ProfileCard({
           <Flag code={p.countryCode} className="h-4 w-6" />
         </span>
       </div>
-      <div className="p-3">
-        <h3 className="truncate font-semibold">
+      <div className="flex flex-col justify-center p-4">
+        <h3 className="truncate text-lg font-semibold">
           {p.nickname}
           <span className="font-normal text-muted-foreground">, {p.age}</span>
         </h3>
-        <p className="mt-0.5 flex items-center gap-1 text-sm text-muted-foreground">
+        <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
           <Icon name="mapPin" className="h-3.5 w-3.5" />
           <span className="truncate">{p.cityName}</span>
         </p>
 
-        <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
+        <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <Stars value={p.ratingAvg} className="h-3 w-3" />
             {p.ratingCount > 0 && (
