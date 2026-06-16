@@ -38,7 +38,7 @@ export interface Dict {
 
 const es: Dict = {
   ui: {
-    tagline: "Conoce gente cerca de ti",
+    tagline: "Chicas disponibles en tu ciudad",
     publish: "Publicar perfil",
     verified: "Verificado",
     verifiedHint: "Identidad verificada con documento oficial",

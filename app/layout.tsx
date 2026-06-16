@@ -18,11 +18,20 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} · Conoce gente cerca de ti`,
+    default: `${SITE_NAME} · Chicas disponibles en tu ciudad`,
     template: `%s · ${SITE_NAME}`,
   },
   description:
-    "Publica tu perfil y conoce gente verificada cerca de ti. Citas por ciudad y país.",
+    "El mejor portal de contactos para adultos: anuncios clasificados eróticos gratis. Disfruta de encuentros sexuales en tu ciudad. Escorts, gay, travestis, swingers y más en CitasAlDia.",
+  keywords: [
+    "contactos",
+    "escorts",
+    "anuncios eróticos",
+    "encuentros sexuales",
+    "citas",
+    "masajes eróticos",
+    "swingers",
+  ],
   robots: { index: true, follow: true },
 };
 

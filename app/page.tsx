@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { Icon } from "@/components/icons";
 import { Flag } from "@/components/Flag";
-import { LocationPicker } from "@/components/LocationPicker";
 import { Button } from "@/components/ui/button";
 import { getCountries } from "@/lib/data";
 import { countryPath, SITE_NAME } from "@/lib/seo";
@@ -11,9 +9,6 @@ import { getDict } from "@/lib/i18n";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const cookieStore = await cookies();
-  const loc = cookieStore.get("loc")?.value || undefined;
-
   const countries = await getCountries();
   const d = getDict("es");
 
@@ -28,8 +23,21 @@ export default async function HomePage() {
           <h1 className="mx-auto mt-5 max-w-2xl text-4xl font-extrabold tracking-tight sm:text-5xl">
             {d.ui.tagline}
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
-            {SITE_NAME} conecta personas por ciudad y país.
+          <p className="mx-auto mt-4 max-w-xl text-lg font-semibold text-primary">
+            Encuentros calientes en tu ciudad
+          </p>
+          <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            ¡Selecciona la ciudad o categoría que más te guste! El mejor portal de
+            contactos para adultos, donde se publican anuncios clasificados eróticos
+            completamente gratis. Disfruta de placenteros encuentros sexuales en tu
+            ciudad. Citas románticas o sexo en Venezuela. Encuentra el anuncio
+            clasificado que más te guste entre todas las categorías: escorts (mujeres
+            y hombres), escorts gay, travestis, chica busca chica, swingers, busca alma
+            gemela y busca amigos. Y si no encuentras tu pareja sexual, publica tu
+            propio anuncio clasificado, es muy fácil y gratis. Descubre todos los
+            servicios sexuales que ofrecen y los mejores masajes eróticos. ¡En
+            citasaldia.com están los encuentros eróticos más calientes de la red!
+            Cumple tus fantasías sexuales con {SITE_NAME}.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button asChild className="h-11 rounded-full px-6 text-base">
@@ -38,10 +46,6 @@ export default async function HomePage() {
                 {d.ui.publish}
               </Link>
             </Button>
-            <LocationPicker
-              countries={countries.map((c) => ({ code: c.code, name: c.name }))}
-              current={loc}
-            />
           </div>
         </div>
       </section>
