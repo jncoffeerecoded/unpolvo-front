@@ -2,12 +2,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function ProfileCardSkeleton() {
   return (
-    <div className="grid grid-cols-[40%_1fr] overflow-hidden rounded-2xl border bg-card">
-      <Skeleton className="h-full min-h-[12rem] w-full rounded-none" />
-      <div className="flex flex-col justify-center space-y-2 p-4">
+    <div className="grid h-56 grid-cols-[34%_1fr] overflow-hidden rounded-2xl border bg-card">
+      <Skeleton className="h-full w-full rounded-none" />
+      <div className="flex flex-col space-y-2 p-4">
         <Skeleton className="h-5 w-2/3" />
         <Skeleton className="h-3 w-1/2" />
-        <Skeleton className="h-5 w-24 rounded-full" />
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-5/6" />
+        <Skeleton className="mt-auto h-4 w-24 rounded-full" />
       </div>
     </div>
   );
@@ -15,7 +17,7 @@ export function ProfileCardSkeleton() {
 
 export function ProfileGridSkeleton({ count = 10 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: count }).map((_, i) => (
         <ProfileCardSkeleton key={i} />
       ))}

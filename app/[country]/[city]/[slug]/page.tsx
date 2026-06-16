@@ -204,7 +204,7 @@ export default async function ProfilePage({ params }: Props) {
       {related.length > 0 && (
         <section className="mt-14">
           <h2 className="text-xl font-bold">{d.ui.recentProfiles}</h2>
-          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((rp) => (
               <ProfileCard key={rp.slug} p={rp} />
             ))}
