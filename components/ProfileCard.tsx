@@ -23,11 +23,11 @@ export function ProfileCard({
       href={href}
       className="group grid grid-cols-[40%_1fr] overflow-hidden rounded-2xl border bg-card shadow-sm transition hover:shadow-md"
     >
-      <div className="relative aspect-[3/4] overflow-hidden bg-muted">
+      <div className="relative flex h-full items-center justify-center overflow-hidden bg-muted">
         <Avatar
           name={p.nickname}
           photoUrl={p.photoUrl}
-          className="h-full w-full transition duration-300 group-hover:scale-105"
+          className="aspect-[3/4] w-full transition duration-300 group-hover:scale-105"
         />
         {p.featured && (
           <Badge className="absolute left-2 top-2 gap-1 bg-amber-400 text-amber-950 hover:bg-amber-400">

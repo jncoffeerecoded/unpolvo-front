@@ -76,7 +76,7 @@ export default async function CountryPage({ params }: Props) {
             <Icon name="star" filled className="h-5 w-5 text-amber-400" />
             {d.ui.promoted}
           </h2>
-          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
             {featured.map((p) => (
               <ProfileCard key={p.slug} p={p} locale={c.locale} />
             ))}
@@ -88,7 +88,7 @@ export default async function CountryPage({ params }: Props) {
       <section className="mt-12">
         <h2 className="text-xl font-bold">{d.ui.recentProfiles}</h2>
         {regular.length > 0 ? (
-          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
             {regular.map((p) => (
               <ProfileCard key={p.slug} p={p} locale={c.locale} />
             ))}
