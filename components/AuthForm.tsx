@@ -1,12 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import {
-  loginWithCredentials,
-  registerUser,
-  type AuthState,
-} from "@/app/auth-actions";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { registerAccount } from "@/app/auth-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,16 +16,57 @@ export function AuthForm({
   mode: "login" | "register";
   next: string;
 }) {
-  const action = mode === "login" ? loginWithCredentials : registerUser;
-  const [state, formAction, pending] = useActionState<AuthState, FormData>(
-    action,
-    {},
-  );
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    setPending(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = String(formData.get("email") ?? "").trim();
+    const password = String(formData.get("password") ?? "");
+
+    try {
+      // En registro, primero creamos la cuenta en el backend.
+      if (mode === "register") {
+        const res = await registerAccount(formData);
+        if (res.error) {
+          setError(res.error);
+          return;
+        }
+      }
+
+      // Inicio de sesión en el cliente: actualiza la sesión (y el navbar) sin recargar.
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (!result || result.error) {
+        setError(
+          mode === "register"
+            ? "Cuenta creada, pero no se pudo iniciar sesión. Intenta entrar manualmente."
+            : "Email o contraseña incorrectos.",
+        );
+        return;
+      }
+
+      router.push(next);
+      router.refresh();
+    } catch {
+      setError("Algo salió mal. Inténtalo de nuevo.");
+    } finally {
+      setPending(false);
+    }
+  }
 
   return (
     <div className="space-y-4">
-      <form action={formAction} className="space-y-3">
-        <input type="hidden" name="next" value={next} />
+      <form onSubmit={handleSubmit} className="space-y-3">
         {mode === "register" && (
           <div className="space-y-1.5">
             <Label htmlFor="name">Nombre</Label>
@@ -57,8 +96,8 @@ export function AuthForm({
           />
         </div>
 
-        {state.error && (
-          <p className="text-sm font-medium text-destructive">{state.error}</p>
+        {error && (
+          <p className="text-sm font-medium text-destructive">{error}</p>
         )}
 
         <Button type="submit" className="w-full" disabled={pending}>
