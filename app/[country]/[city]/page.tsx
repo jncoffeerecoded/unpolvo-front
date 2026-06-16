@@ -75,7 +75,7 @@ export default async function CityPage({ params }: Props) {
             <Icon name="star" filled className="h-5 w-5 text-amber-400" />
             {d.ui.promoted}
           </h2>
-          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {featured.map((p) => (
               <ProfileCard key={p.slug} p={p} locale={c.country.locale} />
             ))}
@@ -87,7 +87,7 @@ export default async function CityPage({ params }: Props) {
       <section className="mt-10">
         <h2 className="text-xl font-bold">{d.ui.recentProfiles}</h2>
         {regular.length > 0 ? (
-          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {regular.map((p) => (
               <ProfileCard key={p.slug} p={p} locale={c.country.locale} />
             ))}
