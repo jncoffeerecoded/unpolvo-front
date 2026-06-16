@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
@@ -38,6 +39,20 @@ export default function RootLayout({
           <Footer />
           <Toaster />
         </Providers>
+
+        {/* Google Analytics (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-73GPE0TKHE"
+          strategy="afterInteractive"
+        />
+        <Script id="ga-gtag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-73GPE0TKHE');
+          `}
+        </Script>
       </body>
     </html>
   );
