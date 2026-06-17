@@ -12,6 +12,9 @@ const FIELDS = [
   "countryCode",
   "citySlug",
   "bodyType",
+  "contactEmail",
+  "contactPhone",
+  "contactWhatsapp",
 ];
 
 // Crea un perfil. El form del navegador hace fetch aquí (multipart) y recibe

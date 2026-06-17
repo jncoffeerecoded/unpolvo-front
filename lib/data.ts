@@ -36,9 +36,43 @@ export type ProfileView = ProfileCardView & {
   ownerId: string | null;
   bio: string;
   countryName: string;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  contactWhatsapp: string | null;
   photos: { url: string; alt: string | null }[];
   comments: CommentView[];
   createdAt: string;
+};
+
+// ─── Chat / mensajería interna ─────────────────────────────────
+export type ConversationListItem = {
+  id: string;
+  status: "pending" | "accepted";
+  role: "owner" | "guest";
+  profile: { slug: string; nickname: string; title: string };
+  otherName: string;
+  otherImage: string | null;
+  lastMessage: string | null;
+  lastMessageAt: string;
+  unread: number;
+};
+
+export type ChatMessage = {
+  id: string;
+  body: string;
+  mine: boolean;
+  createdAt: string;
+};
+
+export type ConversationView = {
+  id: string;
+  status: "pending" | "accepted";
+  role: "owner" | "guest";
+  canSend: boolean;
+  profile: { slug: string; nickname: string; title: string };
+  otherName: string;
+  otherImage: string | null;
+  messages: ChatMessage[];
 };
 
 export type MyProfileView = {
@@ -177,6 +211,18 @@ export function getInteraction(profileId: string, token: string) {
 
 export function getMyProfiles(token: string) {
   return apiGet<MyProfileView[]>("/me/profiles", { token });
+}
+
+export function getMyConversations(token: string) {
+  return apiGet<ConversationListItem[]>("/chat/conversations", { token });
+}
+
+export function getConversation(id: string, token: string) {
+  return getOrNull<ConversationView>(`/chat/conversations/${id}`, { token });
+}
+
+export function getChatUnread(token: string) {
+  return apiGet<{ count: number }>("/chat/unread-count", { token });
 }
 
 export function getUnreadCount(token: string) {

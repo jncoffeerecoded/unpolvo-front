@@ -7,6 +7,7 @@ import { ProfileCard } from "@/components/ProfileCard";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ProfileGallery } from "@/components/ProfileGallery";
 import { ProfileSocial } from "./ProfileSocial";
+import { ContactBox } from "./ContactBox";
 import { Comments } from "./Comments";
 import { getProfileBySlug, getRelated, getInteraction } from "@/lib/data";
 import { getDict } from "@/lib/i18n";
@@ -195,6 +196,19 @@ export default async function ProfilePage({ params }: Props) {
                 likesCount={p.likesCount}
                 ratingAvg={p.ratingAvg}
                 ratingCount={p.ratingCount}
+              />
+            </div>
+
+            <div className="mt-5 border-t pt-5">
+              <ContactBox
+                profileId={p.id}
+                nickname={p.nickname}
+                path={path}
+                isLoggedIn={!!session?.user}
+                isOwner={isOwner}
+                contactEmail={p.contactEmail}
+                contactPhone={p.contactPhone}
+                contactWhatsapp={p.contactWhatsapp}
               />
             </div>
           </div>

@@ -17,6 +17,7 @@ const ICON: Record<string, string> = {
   comment: "chat",
   like: "heart",
   rating: "star",
+  message: "chat",
 };
 
 function text(type: string, actor: string, body: string | null): string {
@@ -27,6 +28,8 @@ function text(type: string, actor: string, body: string | null): string {
       return `${actor} valoró tu perfil con ${body ?? "?"} ★`;
     case "comment":
       return `${actor} comentó: “${body ?? ""}”`;
+    case "message":
+      return `${actor} te envió un mensaje: “${body ?? ""}”`;
     default:
       return `${actor} interactuó con tu perfil`;
   }
@@ -53,8 +56,14 @@ export default async function NotificationsPage() {
           {items.map((n) => {
             const actor = n.actor?.name ?? "Alguien";
             const href =
-              n.profile &&
-              profilePath(n.profile.country.code, n.profile.city.slug, n.profile.slug);
+              n.type === "message"
+                ? "/mensajes"
+                : n.profile &&
+                  profilePath(
+                    n.profile.country.code,
+                    n.profile.city.slug,
+                    n.profile.slug,
+                  );
             const row = (
               <div
                 className={`flex items-start gap-3 rounded-2xl border p-4 ${
@@ -64,7 +73,7 @@ export default async function NotificationsPage() {
                 <span className="mt-0.5 rounded-full bg-primary/10 p-2 text-primary">
                   <Icon
                     name={ICON[n.type] ?? "bell"}
-                    filled={n.type !== "comment"}
+                    filled={n.type !== "comment" && n.type !== "message"}
                     className="h-4 w-4"
                   />
                 </span>

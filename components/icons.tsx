@@ -198,6 +198,22 @@ const PATHS: Record<string, React.ReactNode> = {
   expand: (
     <path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3" />
   ),
+  mail: (
+    <>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m3 7 9 6 9-6" />
+    </>
+  ),
+  phone: (
+    <path d="M5 4h3l1.5 4.5L7.5 10a12 12 0 0 0 6 6l1.5-2 4.5 1.5V19a2 2 0 0 1-2 2A16 16 0 0 1 4 6a2 2 0 0 1 1-2z" />
+  ),
+  whatsapp: (
+    <>
+      <path d="M3.5 20.5 5 16a8 8 0 1 1 3 3z" />
+      <path d="M8.5 9c0 4 2.5 6.5 6.5 6.5.7 0 1.2-.6 1.2-1.2 0-.3-.2-.6-.5-.8l-1.5-.7-1 1c-1.2-.6-2.2-1.6-2.8-2.8l1-1-.7-1.5c-.2-.3-.5-.5-.8-.5C9.1 7.8 8.5 8.3 8.5 9z" />
+    </>
+  ),
+  send: <path d="M21 3 3 10.5l7 2.5 2.5 7z M10 13l4-4" />,
 };
 
 export type IconName = keyof typeof PATHS;

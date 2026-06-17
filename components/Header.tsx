@@ -22,16 +22,27 @@ export function Header() {
   const { data: session, status } = useSession();
   const user = session?.user;
   const [unread, setUnread] = useState(0);
+  const [unreadMsgs, setUnreadMsgs] = useState(0);
 
   useEffect(() => {
     if (status !== "authenticated") return;
     let active = true;
-    fetch("/api/notifications/count")
-      .then((r) => r.json())
-      .then((d) => active && setUnread(d.count ?? 0))
-      .catch(() => {});
+    const load = () => {
+      fetch("/api/notifications/count")
+        .then((r) => r.json())
+        .then((d) => active && setUnread(d.count ?? 0))
+        .catch(() => {});
+      fetch("/api/chat/count")
+        .then((r) => r.json())
+        .then((d) => active && setUnreadMsgs(d.count ?? 0))
+        .catch(() => {});
+    };
+    load();
+    // Refresco periódico para reflejar mensajes nuevos sin recargar.
+    const t = setInterval(load, 20000);
     return () => {
       active = false;
+      clearInterval(t);
     };
   }, [status]);
 
@@ -55,6 +66,22 @@ export function Header() {
             <Skeleton className="h-8 w-8 rounded-full" />
           ) : user ? (
             <>
+              <Button
+                asChild
+                variant="ghost"
+                size="icon"
+                className="relative rounded-full"
+              >
+                <Link href="/mensajes" aria-label="Mensajes">
+                  <Icon name="chat" className="h-5 w-5" />
+                  {unreadMsgs > 0 && (
+                    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                      {unreadMsgs > 9 ? "9+" : unreadMsgs}
+                    </span>
+                  )}
+                </Link>
+              </Button>
+
               <Button
                 asChild
                 variant="ghost"
@@ -96,6 +123,17 @@ export function Header() {
                     <Link href="/cuenta">
                       <Icon name="user" className="mr-2 h-4 w-4" />
                       Mis anuncios
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/mensajes">
+                      <Icon name="chat" className="mr-2 h-4 w-4" />
+                      Mensajes
+                      {unreadMsgs > 0 && (
+                        <span className="ml-auto rounded-full bg-primary px-1.5 text-[10px] font-bold text-primary-foreground">
+                          {unreadMsgs}
+                        </span>
+                      )}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>

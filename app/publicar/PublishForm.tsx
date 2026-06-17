@@ -96,6 +96,9 @@ export function PublishForm({ countries }: { countries: Country[] }) {
       "gender",
       "countryCode",
       "citySlug",
+      "contactEmail",
+      "contactPhone",
+      "contactWhatsapp",
       "bodyType",
       "photoFiles",
     ];
@@ -204,6 +207,51 @@ export function PublishForm({ countries }: { countries: Country[] }) {
               ))}
             </select>
             <FieldError msg={err.citySlug} />
+          </div>
+        </div>
+      </Section>
+
+      <Section
+        title="Contacto"
+        hint="Opcional. Decide cómo quieres que te contacten. Se mostrarán en tu anuncio."
+      >
+        <div className="space-y-1.5">
+          <Label htmlFor="contactEmail">Correo electrónico</Label>
+          <Input
+            id="contactEmail"
+            name="contactEmail"
+            type="email"
+            inputMode="email"
+            placeholder="tucorreo@ejemplo.com"
+            maxLength={120}
+          />
+          <FieldError msg={err.contactEmail} />
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="contactPhone">Teléfono móvil</Label>
+            <Input
+              id="contactPhone"
+              name="contactPhone"
+              type="tel"
+              inputMode="tel"
+              placeholder="+34 600 111 222"
+            />
+            <FieldError msg={err.contactPhone} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="contactWhatsapp">WhatsApp</Label>
+            <Input
+              id="contactWhatsapp"
+              name="contactWhatsapp"
+              type="tel"
+              inputMode="tel"
+              placeholder="+52 55 1234 5678"
+            />
+            <p className="text-xs text-muted-foreground">
+              Con código de país. Abrirá un chat directo de WhatsApp.
+            </p>
+            <FieldError msg={err.contactWhatsapp} />
           </div>
         </div>
       </Section>
