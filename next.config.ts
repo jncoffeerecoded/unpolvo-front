@@ -13,7 +13,7 @@ const csp = [
   "form-action 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://randomuser.me https://unpolvo-back-production.up.railway.app",
+  "img-src 'self' data: blob: https://randomuser.me https://backend.citasaldia.com",
   "font-src 'self' data:",
   "connect-src 'self'",
   "upgrade-insecure-requests",
