@@ -214,6 +214,36 @@ const PATHS: Record<string, React.ReactNode> = {
     </>
   ),
   send: <path d="M21 3 3 10.5l7 2.5 2.5 7z M10 13l4-4" />,
+  lock: (
+    <>
+      <rect x="4.5" y="10.5" width="15" height="10" rx="2" />
+      <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" />
+    </>
+  ),
+  play: <path d="M7 5l12 7-12 7z" />,
+  trash: (
+    <>
+      <path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+      <path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13" />
+    </>
+  ),
+  plus: <path d="M12 5v14M5 12h14" />,
+  image: (
+    <>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <circle cx="8.5" cy="9.5" r="1.5" />
+      <path d="M21 16l-5-5L5 20" />
+    </>
+  ),
+  video: (
+    <>
+      <rect x="3" y="6" width="13" height="12" rx="2" />
+      <path d="M16 10l5-3v10l-5-3z" />
+    </>
+  ),
+  crown: (
+    <path d="M4 18h16M4 18l-1-9 5 4 4-7 4 7 5-4-1 9" />
+  ),
 };
 
 export type IconName = keyof typeof PATHS;

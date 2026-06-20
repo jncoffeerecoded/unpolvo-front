@@ -105,9 +105,15 @@ export default async function AccountPage() {
                     {st.label}
                   </span>
                 </div>
-                <div className="flex shrink-0 gap-2">
+                <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
                   <Button asChild variant="outline" size="sm">
                     <Link href={href}>Ver</Link>
+                  </Button>
+                  <Button asChild variant="secondary" size="sm" className="gap-1.5">
+                    <Link href={`/cuenta/${p.slug}/suscripciones`}>
+                      <Icon name="crown" className="h-4 w-4 text-amber-500" />
+                      Suscripciones
+                    </Link>
                   </Button>
                 </div>
               </div>

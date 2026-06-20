@@ -18,7 +18,16 @@ const ICON: Record<string, string> = {
   like: "heart",
   rating: "star",
   message: "chat",
+  subscription_request: "crown",
+  subscription_approved: "check",
+  subscription_rejected: "x",
 };
+
+const FILLED_TYPES = new Set([
+  "like",
+  "rating",
+  "subscription_request",
+]);
 
 function text(type: string, actor: string, body: string | null): string {
   switch (type) {
@@ -30,6 +39,12 @@ function text(type: string, actor: string, body: string | null): string {
       return `${actor} comentó: “${body ?? ""}”`;
     case "message":
       return `${actor} te envió un mensaje: “${body ?? ""}”`;
+    case "subscription_request":
+      return `${actor} quiere suscribirse a tu plan “${body ?? ""}”`;
+    case "subscription_approved":
+      return `${actor} aprobó tu suscripción al plan “${body ?? ""}”`;
+    case "subscription_rejected":
+      return `${actor} rechazó tu suscripción al plan “${body ?? ""}”`;
     default:
       return `${actor} interactuó con tu perfil`;
   }
@@ -55,15 +70,19 @@ export default async function NotificationsPage() {
         <ul className="mt-6 space-y-2">
           {items.map((n) => {
             const actor = n.actor?.name ?? "Alguien";
+            const profileHref =
+              n.profile &&
+              profilePath(
+                n.profile.country.code,
+                n.profile.city.slug,
+                n.profile.slug,
+              );
             const href =
               n.type === "message"
                 ? "/mensajes"
-                : n.profile &&
-                  profilePath(
-                    n.profile.country.code,
-                    n.profile.city.slug,
-                    n.profile.slug,
-                  );
+                : n.type === "subscription_request"
+                  ? n.profile && `/cuenta/${n.profile.slug}/suscripciones`
+                  : profileHref;
             const row = (
               <div
                 className={`flex items-start gap-3 rounded-2xl border p-4 ${
@@ -73,7 +92,7 @@ export default async function NotificationsPage() {
                 <span className="mt-0.5 rounded-full bg-primary/10 p-2 text-primary">
                   <Icon
                     name={ICON[n.type] ?? "bell"}
-                    filled={n.type !== "comment" && n.type !== "message"}
+                    filled={FILLED_TYPES.has(n.type)}
                     className="h-4 w-4"
                   />
                 </span>

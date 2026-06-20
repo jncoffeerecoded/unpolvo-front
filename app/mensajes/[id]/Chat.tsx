@@ -20,10 +20,17 @@ export function Chat({ initial }: { initial: ConversationView }) {
   const [canSend, setCanSend] = useState(initial.canSend);
   const endRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [previews, setPreviews] = useState<string[]>([]);
   const [state, action, pending] = useActionState<SendState, FormData>(
     sendMessage,
     {},
   );
+
+  function onPickFiles(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []).slice(0, 6);
+    setPreviews(files.map((f) => URL.createObjectURL(f)));
+  }
 
   // Polling cada 4 s para traer mensajes nuevos del otro participante.
   useEffect(() => {
@@ -52,6 +59,7 @@ export function Chat({ initial }: { initial: ConversationView }) {
   useEffect(() => {
     if (state.ok) {
       formRef.current?.reset();
+      setPreviews([]);
       fetch(`/api/chat/${initial.id}`, { cache: "no-store" })
         .then((r) => (r.ok ? r.json() : null))
         .then((data: ConversationView | null) => {
@@ -92,7 +100,26 @@ export function Chat({ initial }: { initial: ConversationView }) {
                   : "rounded-bl-sm bg-muted"
               }`}
             >
-              <p className="whitespace-pre-line break-words">{m.body}</p>
+              {m.attachments?.length > 0 && (
+                <div className="mb-1 grid grid-cols-2 gap-1.5">
+                  {m.attachments.map((a) => (
+                    <a
+                      key={a.id}
+                      href={`/api/media/chat/${a.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`/api/media/chat/${a.id}`}
+                        alt="Adjunto"
+                        className="aspect-square w-full rounded-lg object-cover ring-1 ring-black/10"
+                      />
+                    </a>
+                  ))}
+                </div>
+              )}
+              {m.body && <p className="whitespace-pre-line break-words">{m.body}</p>}
               <p
                 className={`mt-1 text-[10px] ${
                   m.mine ? "text-primary-foreground/70" : "text-muted-foreground"
@@ -118,24 +145,57 @@ export function Chat({ initial }: { initial: ConversationView }) {
             No puedes escribir en esta conversación.
           </p>
         ) : (
-          <form ref={formRef} action={action} className="flex items-end gap-2">
+          <form ref={formRef} action={action} className="space-y-2">
             <input type="hidden" name="conversationId" value={initial.id} />
-            <Textarea
-              name="body"
-              rows={1}
-              maxLength={2000}
-              placeholder="Escribe un mensaje…"
-              className="min-h-10 flex-1 resize-none"
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  formRef.current?.requestSubmit();
-                }
-              }}
-            />
-            <Button type="submit" size="icon" disabled={pending} aria-label="Enviar">
-              <Icon name="send" className="h-5 w-5" />
-            </Button>
+            {previews.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {previews.map((src, i) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={i}
+                    src={src}
+                    alt={`Adjunto ${i + 1}`}
+                    className="h-16 w-16 rounded-lg object-cover ring-1 ring-border"
+                  />
+                ))}
+              </div>
+            )}
+            <div className="flex items-end gap-2">
+              <input
+                ref={fileRef}
+                type="file"
+                name="images"
+                accept="image/png,image/jpeg,image/webp,image/avif"
+                multiple
+                className="sr-only"
+                onChange={onPickFiles}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => fileRef.current?.click()}
+                aria-label="Adjuntar imagen"
+              >
+                <Icon name="image" className="h-5 w-5" />
+              </Button>
+              <Textarea
+                name="body"
+                rows={1}
+                maxLength={2000}
+                placeholder="Escribe un mensaje…"
+                className="min-h-10 flex-1 resize-none"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    formRef.current?.requestSubmit();
+                  }
+                }}
+              />
+              <Button type="submit" size="icon" disabled={pending} aria-label="Enviar">
+                <Icon name="send" className="h-5 w-5" />
+              </Button>
+            </div>
           </form>
         )}
         {state.error && (

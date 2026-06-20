@@ -31,6 +31,15 @@ export type CommentView = {
   replies: CommentView[];
 };
 
+export type PlanView = {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  currency: string;
+  mediaCount: number;
+};
+
 export type ProfileView = ProfileCardView & {
   id: string;
   ownerId: string | null;
@@ -40,8 +49,38 @@ export type ProfileView = ProfileCardView & {
   contactPhone: string | null;
   contactWhatsapp: string | null;
   photos: { url: string; alt: string | null }[];
+  plans: PlanView[];
   comments: CommentView[];
   createdAt: string;
+};
+
+// ─── Suscripciones ─────────────────────────────────────────────
+export type PremiumMediaView = { id: string; type: string; order: number };
+
+export type AdminPlanView = PlanView & {
+  active: boolean;
+  order: number;
+  subscriberCount: number;
+  media: PremiumMediaView[];
+};
+
+export type MySubscriptionView = {
+  id: string;
+  planId: string;
+  status: "pending" | "approved" | "rejected";
+  conversationId: string | null;
+  plan: { id: string; name: string; price: number; currency: string };
+  profile: { slug: string; nickname: string };
+};
+
+export type SubscriberView = {
+  id: string;
+  status: "pending" | "approved" | "rejected";
+  createdAt: string;
+  decidedAt: string | null;
+  conversationId: string | null;
+  subscriber: { id: string; name: string; image: string | null };
+  plan: { id: string; name: string; price: number; currency: string };
 };
 
 // ─── Chat / mensajería interna ─────────────────────────────────
@@ -62,6 +101,7 @@ export type ChatMessage = {
   body: string;
   mine: boolean;
   createdAt: string;
+  attachments: { id: string; type: string }[];
 };
 
 export type ConversationView = {
@@ -76,6 +116,7 @@ export type ConversationView = {
 };
 
 export type MyProfileView = {
+  id: string;
   slug: string;
   title: string;
   nickname: string;
@@ -246,6 +287,28 @@ export type NotificationView = {
 
 export function getNotifications(token: string) {
   return apiGet<NotificationView[]>("/notifications", { token });
+}
+
+// ─── Suscripciones ─────────────────────────────────────────────
+export function getMySubscriptions(token: string) {
+  return apiGet<MySubscriptionView[]>("/me/subscriptions", { token });
+}
+
+export function getProfilePlansAdmin(profileId: string, token: string) {
+  return apiGet<AdminPlanView[]>(`/me/profiles/${profileId}/plans`, { token });
+}
+
+export function getSubscribers(profileId: string, token: string) {
+  return apiGet<SubscriberView[]>(`/me/profiles/${profileId}/subscribers`, {
+    token,
+  });
+}
+
+export function getPlanContent(planId: string, token: string) {
+  return getOrNull<{ planId: string; media: PremiumMediaView[] }>(
+    `/plans/${planId}/content`,
+    { token },
+  );
 }
 
 // ─── Sitemap ───────────────────────────────────────────────────

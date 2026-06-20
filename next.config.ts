@@ -14,6 +14,7 @@ const csp = [
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://randomuser.me https://backend.citasaldia.com",
+  "media-src 'self' blob:",
   "font-src 'self' data:",
   "connect-src 'self'",
   "upgrade-insecure-requests",

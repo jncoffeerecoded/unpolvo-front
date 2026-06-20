@@ -37,7 +37,7 @@ export async function startChat(
 
 export type SendState = { error?: string; ok?: boolean };
 
-// Envío dentro de una conversación abierta.
+// Envío dentro de una conversación abierta. Acepta texto y/o imágenes (capturas).
 export async function sendMessage(
   _prev: SendState,
   formData: FormData,
@@ -47,14 +47,39 @@ export async function sendMessage(
 
   const conversationId = String(formData.get("conversationId") ?? "");
   const body = String(formData.get("body") ?? "").trim();
-  if (!body) return { error: "Escribe un mensaje." };
+  const files = formData
+    .getAll("images")
+    .filter((f): f is File => f instanceof File && f.size > 0);
 
-  const { ok, body: res } = await apiSend(
-    `/chat/conversations/${conversationId}/messages`,
-    { method: "POST", token, json: { body } },
-  );
-  if (!ok) {
-    return { error: (res.error as string) ?? "No se pudo enviar el mensaje." };
+  if (!body && files.length === 0) {
+    return { error: "Escribe un mensaje o adjunta una imagen." };
+  }
+
+  let res;
+  if (files.length) {
+    // Multipart: re-materializa cada File a Blob propio para que fetch lo reenvíe.
+    const fd = new FormData();
+    if (body) fd.append("body", body);
+    for (const f of files) {
+      const buf = Buffer.from(await f.arrayBuffer());
+      const blob = new Blob([buf], { type: f.type || "application/octet-stream" });
+      fd.append("images", blob, f.name || "captura");
+    }
+    res = await apiSend(`/chat/conversations/${conversationId}/messages`, {
+      method: "POST",
+      token,
+      form: fd,
+    });
+  } else {
+    res = await apiSend(`/chat/conversations/${conversationId}/messages`, {
+      method: "POST",
+      token,
+      json: { body },
+    });
+  }
+
+  if (!res.ok) {
+    return { error: (res.body.error as string) ?? "No se pudo enviar el mensaje." };
   }
   revalidatePath(`/mensajes/${conversationId}`);
   return { ok: true };

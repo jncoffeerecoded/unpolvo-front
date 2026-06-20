@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ProfileGallery } from "@/components/ProfileGallery";
 import { ProfileSocial } from "./ProfileSocial";
 import { ContactBox } from "./ContactBox";
+import { SubscribePanel } from "./SubscribePanel";
 import { Comments } from "./Comments";
 import { getProfileBySlug, getRelated, getInteraction } from "@/lib/data";
 import { getDict } from "@/lib/i18n";
@@ -211,6 +212,18 @@ export default async function ProfilePage({ params }: Props) {
                 contactWhatsapp={p.contactWhatsapp}
               />
             </div>
+
+            {(p.plans.length > 0 || isOwner) && (
+              <div className="mt-5 border-t pt-5">
+                <SubscribePanel
+                  plans={p.plans}
+                  slug={p.slug}
+                  path={path}
+                  isLoggedIn={!!session?.user}
+                  isOwner={isOwner}
+                />
+              </div>
+            )}
           </div>
         </aside>
       </div>
