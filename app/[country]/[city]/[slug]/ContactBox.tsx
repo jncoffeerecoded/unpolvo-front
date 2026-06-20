@@ -35,6 +35,12 @@ export function ContactBox({
 
   const hasDirect = !!(contactEmail || contactPhone || contactWhatsapp);
 
+  const whatsappHref = contactWhatsapp
+    ? `https://wa.me/${contactWhatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(
+        `Hola ${nickname}, te vi en citasaldia.com y me gustaría conocerte.`
+      )}`
+    : null;
+
   function send() {
     const text = body.trim();
     if (!text) return;
@@ -56,10 +62,10 @@ export function ContactBox({
       {/* Contacto directo */}
       {hasDirect && (
         <div className="space-y-2">
-          {contactWhatsapp && (
+          {whatsappHref && (
             <Button asChild className="w-full justify-start gap-2 bg-[#25D366] hover:bg-[#1ebe5a] text-white">
               <a
-                href={`https://wa.me/${contactWhatsapp}`}
+                href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
               >
