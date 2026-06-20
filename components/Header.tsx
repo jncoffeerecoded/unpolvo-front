@@ -55,17 +55,17 @@ export function Header() {
         </Link>
 
         <nav className="flex items-center gap-2 sm:gap-3">
-          <Button asChild size="sm">
-            <Link href="/publicar">
-              <Icon name="sparkles" className="h-4 w-4" />
-              Publicar
-            </Link>
-          </Button>
-
           {status === "loading" ? (
             <Skeleton className="h-8 w-8 rounded-full" />
           ) : user ? (
             <>
+              <Button asChild size="sm">
+                <Link href="/publicar">
+                  <Icon name="sparkles" className="h-4 w-4" />
+                  Publicar
+                </Link>
+              </Button>
+
               <Button
                 asChild
                 variant="ghost"

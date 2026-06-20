@@ -96,14 +96,16 @@ export default async function HomePage() {
             </>
           )}
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Button asChild className="h-11 rounded-full px-6 text-base">
-              <Link href="/publicar">
-                <Icon name="sparkles" className="h-5 w-5" />
-                {d.ui.publish}
-              </Link>
-            </Button>
-          </div>
+          {isLoggedIn && (
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Button asChild className="h-11 rounded-full px-6 text-base">
+                <Link href="/publicar">
+                  <Icon name="sparkles" className="h-5 w-5" />
+                  {d.ui.publish}
+                </Link>
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 
