@@ -213,10 +213,10 @@ export default async function ProfilePage({ params }: Props) {
               />
             </div>
 
-            {(p.plans.length > 0 || isOwner) && (
+            {((p.plans?.length ?? 0) > 0 || isOwner) && (
               <div className="mt-5 border-t pt-5">
                 <SubscribePanel
-                  plans={p.plans}
+                  plans={p.plans ?? []}
                   slug={p.slug}
                   path={path}
                   isLoggedIn={!!session?.user}
